@@ -38,6 +38,20 @@ func GenerateEd25519Key(src io.Reader) (PrivKey, PubKey, error) {
 		nil
 }
 
+func GenerateEd25519KeyFromSeed(seed string) (PrivKey, PubKey, error) {
+	seedBytes := []byte(seed)[0:32]
+	priv := ed25519.NewKeyFromSeed(seedBytes)
+	pub := priv.Public()
+
+	return &Ed25519PrivateKey{
+			k: priv,
+		},
+		&Ed25519PublicKey{
+			k: pub.([]byte),
+		},
+		nil
+}
+
 // Type of the private key (Ed25519).
 func (k *Ed25519PrivateKey) Type() pb.KeyType {
 	return pb.KeyType_Ed25519
